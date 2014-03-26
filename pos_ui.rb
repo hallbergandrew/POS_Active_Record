@@ -63,18 +63,19 @@ def add_product
 end
 
 def delete_product
+  list_products
   puts "Enter name of product to delete:"
   to_delete = gets.chomp
   product = Product.where({name: to_delete})
   Product.delete(product.first.id)
-  puts "#{product} has been deleted!"
+  puts "#{product.first.name} has been deleted!"
 
 end
 
 def list_products
   puts "List of all products in the system:\n\n"
   products = Product.all
-  products.each { |product| puts product.name + " $" + product.price.to_s}
+  products.each { |product| puts product.name.to_s + " $" + product.price.to_s}
 end
 
 def add_cashier
@@ -107,9 +108,9 @@ def add_to_cart
   puts "Enter a quantity:"
   quantity = gets.chomp.to_i
   choice = Product.where({name: choice})
-  Customer.create({product_id: choice.first.id, quantity: quantity})
+  customer = Customer.create({product_id: choice.first.id, quantity: quantity})
   puts "#{quantity}: #{choice.first.name} has been added to your shopping cart!"
-  list_cart
+
 end
 
 def list_cart
@@ -119,6 +120,7 @@ def list_cart
   item_name = Product.find(item.product_id).name
   item_price = Product.find(item.product_id).price
   item_number = item.quantity
+
   puts "#{item_name}. . . \t# #{item_number}"
   sub_price = item_price * item_number
   total_price << sub_price
